@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VoxGuard Live Risk Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body class="vg-body">
+  <div class="vg-shell">
+    <header class="vg-topbar">
+      <div class="vg-brand">
+        <svg width="22" height="22" viewBox="0 0 22 22"><rect width="22" height="22" rx="6" fill="#4f8dff"/><path d="M6 12 L9 8.5 L11 14 L13 6 L15 11.5 L17 9" stroke="#0a0a0b" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><b>VoxGuard</b><span>Live risk monitor</span></div>
+      </div>
+      <div class="vg-topbar-actions">
+        <div id="modelPill" class="vg-pill-status"><i></i><span>Checking detector…</span></div>
+        <div id="monitorPill" class="vg-pill-status"><i></i><span>Connecting…</span></div>
+        <button class="vg-btn" data-action="verify" disabled title="Select a session first">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Request verification
+        </button>
+        <button class="vg-btn" data-action="hold" disabled title="Select a session first">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="7" y="5" width="4" height="14" rx="1.2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="5" width="4" height="14" rx="1.2" stroke="currentColor" stroke-width="1.8"/></svg>
+          Hold
+        </button>
+        <button class="vg-btn danger" data-action="end" disabled title="Select a session first">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          End call
+        </button>
+      </div>
+    </header>
+
+    <div class="vg-layout">
+      <aside class="vg-queue">
+        <div class="vg-queue-head"><span>Calls being watched</span><span id="queueCount">0 live</span></div>
+        <div id="queueList"><div class="vg-empty-queue">Waiting for an active call…</div></div>
+        <div class="vg-note">Authorized prototype environment. Listening and analysis require participant consent. Nothing is recorded to disk.</div>
+      </aside>
+
+      <section id="mainEmpty" class="vg-main">
+        <div class="vg-empty-main">
+          <div class="mark">~</div>
+          <h2>Waiting for a live call</h2>
+          <p>Audio health and voice-integrity readings will appear here independently for both participants as soon as a call connects.</p>
+        </div>
+      </section>
+
+      <main id="mainDetail" class="vg-main hidden">
+        <div class="vg-crumb"><b id="sessionSummary">—</b> · <span id="calibrationNote">4.0s window / 2.0s hop</span></div>
+        <p class="vg-lead" id="heroSentence">—</p>
+
+        <div class="vg-participants">
+          <article class="vg-pcard" id="cardA" data-tone="neutral">
+            <div class="pcard-head">
+              <div class="pname"><b id="nameA">Caller A</b><span id="onlineA">Waiting for audio</span></div>
+              <div class="pscore"><b id="scoreA">--</b><small id="wordA">Listening…</small></div>
+            </div>
+            <div class="vg-wave-strip"><svg viewBox="0 0 300 40" preserveAspectRatio="none"><polyline id="waveA" points="0,20 300,20" fill="none" stroke="#4a4a50" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="pmeta"><span id="windowA">Collecting the first 4-second window</span><span id="latencyA">--</span></div>
+            <div class="pchart-label"><span>Risk history</span><span>oldest → most recent</span></div>
+            <div class="vg-bars" id="barsA"><span class="waiting">Waiting for first inference…</span></div>
+          </article>
+          <article class="vg-pcard" id="cardB" data-tone="neutral">
+            <div class="pcard-head">
+              <div class="pname"><b id="nameB">Caller B</b><span id="onlineB">Waiting for audio</span></div>
+              <div class="pscore"><b id="scoreB">--</b><small id="wordB">Listening…</small></div>
+            </div>
+            <div class="vg-wave-strip"><svg viewBox="0 0 300 40" preserveAspectRatio="none"><polyline id="waveB" points="0,20 300,20" fill="none" stroke="#4a4a50" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="pmeta"><span id="windowB">Collecting the first 4-second window</span><span id="latencyB">--</span></div>
+            <div class="pchart-label"><span>Risk history</span><span>oldest → most recent</span></div>
+            <div class="vg-bars" id="barsB"><span class="waiting">Waiting for first inference…</span></div>
+          </article>
+        </div>
+
+        <div class="vg-footer">
+          <button class="vg-btn" data-tap="caller_a">Listen · Caller A</button>
+          <button class="vg-btn" data-tap="caller_b">Listen · Caller B</button>
+          <button class="vg-btn" data-tap="both">Listen · Both</button>
+          <button class="vg-btn" id="stopTap">Stop</button>
+          <span id="tapState" class="vg-log hidden">Live audio tap active · <b id="tapLabel"></b></span>
+          <span class="vg-log" id="eventLog" style="margin-left:auto">No concerns raised in this call yet.</span>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="/static/dashboard.js"></script>
+</body>
+</html>

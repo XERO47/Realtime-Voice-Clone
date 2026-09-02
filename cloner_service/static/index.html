@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VoxGuard · Clone Runtime</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="mark">VG</span><span>VOXGUARD <small>CLONE RUNTIME</small></span></a>
+    <div class="top-actions"><a href="http://127.0.0.1:8000/attacker">Attacker console ↗</a><a href="/docs">API docs ↗</a><span id="healthPill" class="pill idle">OFFLINE</span></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div><span class="kicker">ZERO-SHOT VOICE LAB · AUTHORIZED DEMO</span><h1>Keep the voice ready.<br><em>Generate on demand.</em></h1><p>One small model, one resident GPU process, and reusable speaker conditionings. Reference audio enters once; cloned speech leaves as a standard WAV.</p></div>
+      <div class="signal-card"><span>RUNTIME ROUTE</span><div class="route"><b>REFERENCE</b><i></i><b>NANO 110M</b><i></i><b>WAV / VoIP</b></div><small>Watermarked output · transient generation</small></div>
+    </section>
+
+    <section class="runtime card">
+      <div class="section-head"><div><span class="step">01</span><div><h2>Runtime control</h2><p>Load once and keep weights resident.</p></div></div><span id="operationText" class="operation">Waiting</span></div>
+      <div class="runtime-grid">
+        <div><label for="deviceSelect">Compute target</label><select id="deviceSelect"><option value="auto">Auto — prefer CUDA</option><option value="cuda">CUDA GPU</option><option value="cpu">CPU fallback</option></select></div>
+        <div class="stat"><span>MODEL</span><b>Chatterbox Nano</b><small>110M · English</small></div>
+        <div class="stat"><span>ACTIVE DEVICE</span><b id="activeDevice">—</b><small id="gpuName">Not loaded</small></div>
+        <div class="stat"><span>VOICE MEMORY</span><b id="voiceMemory">0 / 0</b><small>cached / registered</small></div>
+        <div class="runtime-buttons"><button id="loadModel" class="button primary">Load model</button><button id="unloadModel" class="button ghost">Unload</button></div>
+      </div>
+      <div id="runtimeNotice" class="notice">First load downloads and caches the model. Later starts use the local cache.</div>
+    </section>
+
+    <div class="workspace">
+      <section class="card panel">
+        <div class="section-head"><div><span class="step">02</span><div><h2>Voice memory</h2><p>Encode a clean 6–15 second sample.</p></div></div><button id="clearCache" class="text-button">Clear RAM cache</button></div>
+        <label>Voice label</label><input id="voiceName" type="text" maxlength="60" value="Demo speaker" placeholder="e.g. Authorized demo speaker">
+        <label class="dropzone" for="referenceAudio"><span>DROP REFERENCE AUDIO</span><b id="referenceName">Choose a recording</b><small>WAV recommended · clear single speaker · max 25 MB</small></label>
+        <input id="referenceAudio" type="file" hidden accept="audio/*,.wav,.flac,.ogg,.mp3,.m4a,.aac,.webm">
+        <label class="consent"><input id="voiceConsent" type="checkbox"><span>I confirm this speaker explicitly consented to voice cloning for this demo.</span></label>
+        <button id="encodeVoice" class="button primary wide">Encode & keep in memory</button>
+        <div class="voice-title"><span>CACHED VOICES</span><small id="voiceCount">0 profiles</small></div>
+        <div id="voiceList" class="voice-list"><div class="empty">No voice loaded yet.</div></div>
+      </section>
+
+      <section class="card panel generation">
+        <div class="section-head"><div><span class="step">03</span><div><h2>Generate clone</h2><p>Produce audio using the selected identity.</p></div></div><span class="watermark">WATERMARKED</span></div>
+        <label for="scriptText">Script</label>
+        <textarea id="scriptText" maxlength="600">Hello, this is an authorized real-time voice cloning test for the VoxGuard protected call demonstration.</textarea>
+        <div class="char-count"><span>Supports [laugh], [chuckle], [cough]</span><b><span id="charCount">100</span> / 600</b></div>
+        <div class="controls">
+          <label>Temperature <output id="tempValue">0.80</output><input id="temperature" type="range" min="0.2" max="1.3" step="0.05" value="0.8"></label>
+          <label>Top P <output id="topPValue">0.95</output><input id="topP" type="range" min="0.5" max="1" step="0.01" value="0.95"></label>
+          <label>Repetition penalty <output id="repValue">1.20</output><input id="repetition" type="range" min="1" max="1.8" step="0.05" value="1.2"></label>
+          <label>Seed <input id="seed" type="number" min="0" max="2147483647" value="42"></label>
+        </div>
+        <label class="consent compact"><input id="generationConsent" type="checkbox"><span>Use the selected voice only for this authorized security demonstration.</span></label>
+        <button id="generateClone" class="button danger wide">Generate cloned speech</button>
+        <div id="result" class="result hidden">
+          <div class="result-head"><div><span>GENERATED OUTPUT</span><b id="resultName">Clone ready</b></div><a id="downloadClone" class="button ghost" download="voxguard-clone.wav">Download WAV</a></div>
+          <audio id="cloneAudio" controls></audio>
+          <div class="metrics"><span><b id="generationTime">—</b>generation</span><span><b id="audioTime">—</b>audio</span><span><b id="rtfValue">—</b>RTF</span></div>
+          <button id="openAttacker" class="button ink wide">Open attacker console to transmit ↗</button>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,1 @@
+"""VoxGuard FastAPI application."""

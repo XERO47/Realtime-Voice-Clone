@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VoxGuard Authorized Attack Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/static/attacker.css">
+</head>
+<body class="attack-body">
+  <header class="app-header attack-header">
+    <div class="brand"><span class="brandmark attack-mark">R</span><div>Attack Console<small>AUTHORIZED SYNTHETIC-AUDIO SIMULATION</small></div></div>
+    <div id="attackServiceStatus" class="status"><i class="status-dot"></i><span>Offline</span></div>
+  </header>
+
+  <main class="page-shell attack-shell">
+    <div class="deploy-notice">
+      <b>Hosted demo note:</b> the live voice-cloning model may not be running on this deployment. If cloning is unavailable, use one of the preloaded demo clips below or upload your own authorized audio instead. Cloning model: <a href="https://huggingface.co/ResembleAI/chatterbox" target="_blank" rel="noopener">ResembleAI/chatterbox on Hugging Face</a>.
+    </div>
+    <section class="attack-intro">
+      <div><div class="eyebrow attack-eyebrow">Red-team demonstration environment</div><h1>Control the voice sent into the call.</h1><p>Dial the protected VoIP client, generate a synthetic script locally, and transmit it through the same live channel inspected by the monitoring console.</p></div>
+      <div class="authorization-chip"><i></i><span><b>CONSENT REQUIRED</b>Use only in the authorized demo environment</span></div>
+    </section>
+
+    <div class="attack-flow">
+      <div class="flow-step">
+        <div class="step-rail"><span class="step-index">1</span></div>
+        <section class="card attack-card">
+          <div class="card-kicker">Identity</div>
+          <h2>Join the call network</h2>
+          <label class="field-label" for="attackerId">Temporary attacker ID</label>
+          <input id="attackerId" class="text-input" maxlength="20" autocomplete="off">
+          <button id="goOnlineAttack" class="button attack-primary wide">Go online</button>
+        </section>
+      </div>
+
+      <div class="flow-step">
+        <div class="step-rail"><span class="step-index">2</span></div>
+        <section class="card attack-card">
+          <div class="card-kicker">Target</div>
+          <h2>Dial protected user</h2>
+          <label class="field-label" for="attackTarget">Target temporary ID</label>
+          <input id="attackTarget" class="text-input" placeholder="Example: RIVER-2048" autocomplete="off">
+          <button id="startAttackCall" class="button wide" disabled>Start VoIP call</button>
+        </section>
+      </div>
+
+      <div class="flow-step">
+        <div class="step-rail"><span class="step-index">3</span></div>
+        <section class="card source-workbench">
+          <div class="workbench-head"><div><div class="card-kicker">Outbound audio</div><h2>Choose the transmitted source</h2></div><span id="sourceReadyPill" class="source-pill">TTS READY</span></div>
+
+          <div class="source-options">
+            <button class="source-option" data-source="mic"><span class="source-icon">MIC</span><span><b>Live microphone</b><small>Speak directly into the call</small></span><i></i></button>
+            <button class="source-option selected" data-source="tts"><span class="source-icon">TTS</span><span><b>Synthetic TTS</b><small>Generate and transmit a script</small></span><i></i></button>
+            <button class="source-option" data-source="clone"><span class="source-icon">VC</span><span><b>Voice clone</b><small>Transmit an authorized clone clip</small></span><i></i></button>
+          </div>
+
+          <div id="ttsWorkbench" class="tts-workbench">
+            <div class="script-head"><label class="field-label" for="attackScript">Attack script</label><span id="characterCount">0 / 500</span></div>
+            <textarea id="attackScript" class="text-input attack-script" maxlength="500">Hello. This is an authorized synthetic-audio test inside the VoxGuard demonstration call.</textarea>
+            <div class="tts-settings">
+              <label><span>Voice</span><select id="attackVoice" class="select-input"><option>Loading voices...</option></select></label>
+              <label><span>Speed <b id="speedValue">1.00x</b></span><input id="attackSpeed" type="range" min="0.75" max="1.35" step="0.05" value="1"></label>
+            </div>
+            <div class="generate-row"><button id="generateAttackSpeech" class="button attack-primary">Generate synthetic speech</button><span id="generationMessage">Engine is ready</span></div>
+
+            <div id="generatedClip" class="generated-clip hidden">
+              <div class="clip-meta"><span class="clip-playmark">WAV</span><div><b>Generated payload</b><small><span id="clipDuration">--</span> audio / <span id="clipGeneration">--</span> generated</small></div><span id="clipVoice">--</span></div>
+              <audio id="attackPreview" controls></audio>
+              <button id="injectSpeech" class="button transmit-button" disabled><span>Transmit into active call</span><small>Sends this audio as the attacker's live voice</small></button>
+            </div>
+          </div>
+
+          <div id="cloneWorkbench" class="tts-workbench clone-workbench hidden">
+            <div class="clone-heading"><div><span class="field-label">Cloning service</span><p id="clonerStatusText">Checking cloning service...</p></div><button id="refreshClonerVoices" class="button secondary">Refresh voices</button></div>
+            <label class="field-label" for="clonerVoiceSelect">Encoded voice</label>
+            <select id="clonerVoiceSelect" class="select-input"><option value="">Checking cloning service...</option></select>
+            <label class="field-label" for="clonerScript">Script</label>
+            <textarea id="clonerScript" class="text-input attack-script" maxlength="600">Hello, this is an authorized real-time voice clone test for the VoxGuard protected call demonstration.</textarea>
+            <label class="clone-drop" style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input id="clonerConsent" type="checkbox"><span>I confirm this speaker explicitly consented to voice cloning for this demo.</span></label>
+            <div class="generate-row"><button id="generateClonerClip" class="button attack-primary" disabled>Generate cloned speech</button><span id="clonerGenerationMessage">Load a voice first</span></div>
+
+            <div class="clone-heading"><div><span class="field-label">Authorized clone payload</span><p>Choose a preloaded clip or load one locally. Audio remains in the demo environment.</p></div><button id="refreshClones" class="button secondary">Refresh library</button></div>
+            <label class="field-label" for="cloneLibrary">Preloaded demo clips</label>
+            <select id="cloneLibrary" class="select-input"><option value="">Checking clone library...</option></select>
+            <label class="clone-drop" for="cloneUpload"><span>LOAD LOCAL AUDIO</span><b>Choose WAV, MP3, OGG, M4A, FLAC or WebM</b><small>Browser-local input · maximum 50 MB · authorized voices only</small></label>
+            <input id="cloneUpload" class="hidden" type="file" accept="audio/*,.wav,.mp3,.ogg,.m4a,.aac,.flac,.webm">
+            <div id="cloneClip" class="generated-clip hidden">
+              <div class="clip-meta"><span class="clip-playmark">VC</span><div><b id="cloneClipName">Clone payload</b><small><span id="cloneClipSize">--</span> · ready for outbound transmission</small></div><span>AUTHORIZED</span></div>
+              <audio id="clonePreview" controls></audio>
+              <button id="injectClone" class="button transmit-button" disabled><span>Transmit clone into active call</span><small>Replaces the attacker's outbound voice for this clip</small></button>
+            </div>
+          </div>
+
+          <div id="transmitProgress" class="transmit-progress hidden"><div><span id="transmitLabel">TRANSMITTING SYNTHETIC AUDIO</span><b id="transmitCountdown">--</b></div><i><em id="transmitBar"></em></i></div>
+        </section>
+      </div>
+
+      <div class="flow-step">
+        <div class="step-rail"><span class="step-index">4</span></div>
+        <section class="card run-state-card">
+          <div class="card-kicker">Live call</div>
+          <div class="run-state-head"><span>CALL STATE</span><i id="callStateDot"></i></div>
+          <strong id="attackCallState">Not connected</strong>
+          <div class="run-state-grid">
+            <div><span>Session</span><b id="attackSession">--</b></div>
+            <div><span>Target</span><b id="attackPeer">--</b></div>
+            <div><span>Outbound source</span><b id="activeSourceLabel">Synthetic TTS</b></div>
+          </div>
+          <div id="attackCallActions" class="compact-actions hidden"><button id="attackMute" class="button secondary">Mute</button><button id="attackSpeaker" class="button secondary">Speaker off</button><button id="attackEnd" class="button danger">End</button></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="attack-reference">
+      <section class="card attack-card demo-sequence">
+        <div class="card-kicker">Demo sequence</div><h2>What the judges see</h2>
+        <ol><li><span>1</span><div><b>Victim accepts</b><small>The call is established normally.</small></div></li><li><span>2</span><div><b>Clone is transmitted</b><small>Authorized cloned audio replaces the attacker's microphone.</small></div></li><li><span>3</span><div><b>Monitor analyses</b><small>The same participant stream reaches interception.</small></div></li><li><span>4</span><div><b>System responds</b><small>Risk and verification actions appear live.</small></div></li></ol>
+      </section>
+      <section class="card attack-card event-card"><div class="card-kicker">Run log</div><div id="attackLog" class="attack-log"><p><time>READY</time>Authorized console initialized.</p></div></section>
+      <section class="future-adapter"><span>CLONE SOURCE ACTIVE</span><b>Pre-generated clone adapter</b><p>Use a preloaded demo clip or load a file in the browser. A live cloning model can later publish audio through this same outbound interface.</p></section>
+    </div>
+  </main>
+
+  <div id="attackerIncoming" class="modal-backdrop hidden"><div class="card modal"><div class="eyebrow">Incoming protected call</div><h2><span id="attackerIncomingFrom"></span> is calling</h2><p>Accept using the currently selected outbound source.</p><div class="modal-actions"><button id="attackerDecline" class="button secondary">Decline</button><button id="attackerAccept" class="button attack-primary">Accept call</button></div></div></div>
+  <div id="attackIntervention" class="attack-intervention hidden"></div>
+  <audio id="attackRemoteAudio" autoplay></audio>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="/static/attacker.js"></script>
+</body>
+</html>

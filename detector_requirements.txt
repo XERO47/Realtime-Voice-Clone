@@ -1,0 +1,9 @@
+fastapi==0.116.1
+uvicorn==0.35.0
+httpx==0.28.1
+numpy==1.26.4
+soundfile==0.14.0
+python-multipart==0.0.20
+transformers==4.38.2
+# Create this environment with --system-site-packages to reuse torch 2.7.1+cpu.
+# Install matching torchaudio separately from https://download.pytorch.org/whl/cpu.

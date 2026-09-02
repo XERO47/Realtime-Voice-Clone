@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+.tmp_pycache/
+
+# Virtualenvs / package managers
+.venv/
+.venv-cloner/
+.venv-detector/
+.uv-cache/
+
+# Model weights / caches (large, private, or downloadable separately)
+*.pth
+models/
+vendor/
+artifacts/
+
+# Runtime / generated data
+cloner-data/
+
+# Browser test profiles
+.chrome-*/
+
+# Local personal dev scripts
+start_with_tunnel.ps1
+
+# OS
+Thumbs.db
+.DS_Store
