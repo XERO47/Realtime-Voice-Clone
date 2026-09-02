@@ -25,13 +25,3 @@ python train.py                    # trains, saves best_detector_v5.pth
 python evaluate.py                                     # evaluate on dev set
 python evaluate.py best_detector_v5.pth v5_eval_kaggle_export/manifests/eval_manifest.csv
 ```
-
-## The one thing to know before trusting a number
-
-`v5_dataset`'s train and dev manifests **share speakers by design** (split is
-by utterance, not speaker). A low dev EER means the model learned
-Chatterbox's fingerprint on voices it has already heard -- it is an overfit
-check, not a generalization measurement. `build_eval_dataset.py`'s held-out
-set is file-disjoint from train/dev but still speaker-overlapping; its build
-script prints the exact overlap percentage so you know how much that caveat
-applies.
