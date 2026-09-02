@@ -1,3 +1,7 @@
+# Realtime-Voice-Clone / VoxGuard
+
+Detector training pipeline (`model/`) plus the full VoxGuard demo application below: a temporary-ID VoIP calling app, an authorized synthetic-voice attack console, a live risk dashboard, and the real-time detector/cloning services.
+
 # VoxGuard VoIP MVP
 
 A FastAPI-based temporary-ID WebRTC calling service with participant-separated live audio monitoring, an authorized synthetic-voice attack console, and a real-time voice-clone/deepfake detector.

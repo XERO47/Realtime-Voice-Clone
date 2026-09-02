@@ -1,0 +1,9 @@
+torch
+torchaudio
+transformers
+peft
+scikit-learn
+numpy
+pandas
+soundfile
+wandb
